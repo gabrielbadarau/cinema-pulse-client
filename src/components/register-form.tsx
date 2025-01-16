@@ -16,7 +16,7 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useRegister } from '@/hooks/auth/useCreateUser';
+import { useRegister } from '@/hooks/auth/use-create-user';
 
 import fillDetails from '../assets/fill-details.svg';
 
