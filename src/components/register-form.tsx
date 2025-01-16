@@ -1,6 +1,7 @@
 import { Link } from 'react-router';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
+import { Loader2 } from 'lucide-react';
 
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
@@ -15,6 +16,7 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useRegister } from '@/hooks/auth/useCreateUser';
 
 import fillDetails from '../assets/fill-details.svg';
 
@@ -39,8 +41,10 @@ export function RegisterForm({
     },
   });
 
+  const { mutate, isPending } = useRegister();
+
   function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
+    mutate(values);
   }
 
   return (
@@ -100,7 +104,11 @@ export function RegisterForm({
                   )}
                 />
                 <Button type="submit" className="w-full">
-                  Create Account
+                  {isPending ? (
+                    <Loader2 className="animate-spin" />
+                  ) : (
+                    'Create Account'
+                  )}
                 </Button>
                 <div className="relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t after:border-border" />
                 <div className="text-center text-sm">
