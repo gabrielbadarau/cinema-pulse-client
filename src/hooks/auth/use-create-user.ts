@@ -4,7 +4,7 @@ import { createUser } from '@/api/authApi';
 import { useMutation } from '@tanstack/react-query';
 import { useToast } from '@/hooks/use-toast';
 
-export const useRegister = () => {
+export const useCreateUser = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
 
@@ -12,7 +12,7 @@ export const useRegister = () => {
     mutationFn: (data: { name: string; email: string; password: string }) =>
       createUser(data.name, data.email, data.password),
     onSuccess: () => {
-      navigate('/');
+      navigate('/login', { replace: true });
     },
     onError: (error: Error) => {
       toast({

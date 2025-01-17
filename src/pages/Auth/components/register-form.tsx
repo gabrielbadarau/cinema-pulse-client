@@ -1,6 +1,7 @@
 import { Link } from 'react-router';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
+import { Loader2 } from 'lucide-react';
 
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
@@ -15,17 +16,19 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useCreateUser } from '@/hooks/auth/use-create-user';
 
-import treeSwing from '../assets/tree-swing.svg';
+import fillDetails from '../../../assets/fill-details.svg';
 
 const formSchema = z.object({
+  name: z.string().min(1, 'Name is required'),
   email: z.string().min(1, 'Email is required'),
   password: z
     .string()
     .min(8, { message: 'Password must be at least 8 characters long' }),
 });
 
-export function LoginForm({
+export function RegisterForm({
   className,
   ...props
 }: React.ComponentProps<'div'>) {
@@ -33,12 +36,14 @@ export function LoginForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
       email: '',
+      name: '',
       password: '',
     },
   });
+  const { mutate, isPending } = useCreateUser();
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
+    mutate(values);
   }
 
   return (
@@ -49,11 +54,24 @@ export function LoginForm({
             <form onSubmit={form.handleSubmit(onSubmit)} className="p-6 md:p-8">
               <div className="flex flex-col gap-6">
                 <div className="flex flex-col items-center text-center">
-                  <h1 className="text-2xl font-bold">Welcome back</h1>
+                  <h1 className="text-2xl font-bold">Create an account</h1>
                   <p className="text-balance text-muted-foreground">
-                    Login to Cinema Pulse
+                    Enter your details to get started
                   </p>
                 </div>
+                <FormField
+                  control={form.control}
+                  name="name"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Name</FormLabel>
+                      <FormControl>
+                        <Input placeholder="John Doe" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
                 <FormField
                   control={form.control}
                   name="email"
@@ -85,13 +103,17 @@ export function LoginForm({
                   )}
                 />
                 <Button type="submit" className="w-full">
-                  Login
+                  {isPending ? (
+                    <Loader2 className="animate-spin" />
+                  ) : (
+                    'Create Account'
+                  )}
                 </Button>
                 <div className="relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t after:border-border" />
                 <div className="text-center text-sm">
-                  Don&apos;t have an account?{' '}
-                  <Link to="/register" className="underline underline-offset-4">
-                    Sign up
+                  Already have an account?{' '}
+                  <Link to="/" className="underline underline-offset-4">
+                    Login
                   </Link>
                 </div>
               </div>
@@ -99,16 +121,16 @@ export function LoginForm({
           </Form>
           <div className="relative hidden bg-muted md:block">
             <img
-              src={treeSwing}
-              alt="Tree Swing Illustration"
+              src={fillDetails}
+              alt="Fill Details Illustration"
               className="absolute inset-0 h-full w-full dark:brightness-[0.2] dark:grayscale bg-white"
             />
           </div>
         </CardContent>
       </Card>
       <div className="text-balance text-center text-xs text-muted-foreground [&_a]:underline [&_a]:underline-offset-4 hover:[&_a]:text-primary">
-        By clicking continue, you agree to our <a href="#">Terms of Service</a>{' '}
-        and <a href="#">Privacy Policy</a>.
+        By clicking create account, you agree to our{' '}
+        <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>.
       </div>
     </div>
   );
