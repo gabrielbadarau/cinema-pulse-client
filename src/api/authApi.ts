@@ -16,3 +16,6 @@ export const login = (email: string, password: string) =>
     },
     { withCredentials: true }
   );
+
+export const logout = () =>
+  axiosClient.post('/auth/logout', {}, { withCredentials: true });

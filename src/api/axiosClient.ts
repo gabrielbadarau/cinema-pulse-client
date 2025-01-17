@@ -7,12 +7,19 @@ const axiosClient = axios.create({
   },
 });
 
-// axiosClient.interceptors.request.use((config) => {
-//   const token = localStorage.getItem('authToken');
-//   if (token) {
-//     config.headers.Authorization = `Bearer ${token}`;
-//   }
-//   return config;
-// });
+axiosClient.interceptors.request.use(
+  (config) => {
+    const accessToken = localStorage.getItem('accessToken-cinema-pulse-api');
+    const excludePrefix = '/auth';
+    if (accessToken && !config.url?.includes(excludePrefix)) {
+      config.headers.Authorization = `Bearer ${accessToken}`;
+    }
+
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);
 
 export default axiosClient;

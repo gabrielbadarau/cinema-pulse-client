@@ -1,21 +1,22 @@
 import { useNavigate } from 'react-router';
 import { AxiosError } from 'axios';
 
-import { createUser } from '@/api/authApi';
+import { logout } from '@/api/authApi';
 import { useMutation } from '@tanstack/react-query';
 import { useToast } from '@/hooks/use-toast';
 
-export const useCreateUser = () => {
+export const useLogout = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
 
   return useMutation({
-    mutationFn: (data: { name: string; email: string; password: string }) =>
-      createUser(data.name, data.email, data.password),
+    mutationFn: () => logout(),
     onSuccess: () => {
+      localStorage.removeItem('accessToken-cinema-pulse-api');
       navigate('/login', { replace: true });
     },
     onError: (error: AxiosError<{ message: string }>) => {
+      console.log(error);
       toast({
         variant: 'destructive',
         description: error.response?.data?.message || error.message,

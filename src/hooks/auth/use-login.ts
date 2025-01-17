@@ -1,4 +1,5 @@
 import { useNavigate } from 'react-router';
+import { AxiosError } from 'axios';
 
 import { login } from '@/api/authApi';
 import { useMutation } from '@tanstack/react-query';
@@ -23,10 +24,10 @@ export const useLogin = () => {
         });
       }
     },
-    onError: (error: Error) => {
+    onError: (error: AxiosError<{ message: string }>) => {
       toast({
         variant: 'destructive',
-        description: error.message,
+        description: error.response?.data?.message || error.message,
       });
     },
   });
