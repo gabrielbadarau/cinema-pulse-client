@@ -24,10 +24,10 @@ export const useLogin = () => {
         });
       }
     },
-    onError: (error: AxiosError<{ message: string }>) => {
+    onError: (error: AxiosError<{ error: string }>) => {
       toast({
         variant: 'destructive',
-        description: error.response?.data?.message || error.message,
+        description: error.response?.data?.error || error.message,
       });
     },
   });

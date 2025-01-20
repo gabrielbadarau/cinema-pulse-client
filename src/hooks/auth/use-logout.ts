@@ -15,11 +15,11 @@ export const useLogout = () => {
       localStorage.removeItem('accessToken-cinema-pulse-api');
       navigate('/login', { replace: true });
     },
-    onError: (error: AxiosError<{ message: string }>) => {
+    onError: (error: AxiosError<{ error: string }>) => {
       console.log(error);
       toast({
         variant: 'destructive',
-        description: error.response?.data?.message || error.message,
+        description: error.response?.data?.error || error.message,
       });
     },
   });
