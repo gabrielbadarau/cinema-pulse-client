@@ -48,6 +48,7 @@ axiosClient.interceptors.response.use(
         originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
         return axiosClient(originalRequest);
       } catch (refreshError) {
+        localStorage.removeItem('accessToken-cinema-pulse-api');
         console.error('Refresh token failed:', refreshError);
         window.location.href = '/login';
         return Promise.reject(refreshError);

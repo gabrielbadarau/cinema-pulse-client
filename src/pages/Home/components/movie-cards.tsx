@@ -4,18 +4,15 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useGetMovies } from '@/hooks/movies/use-get-movies';
 import { toast } from '@/hooks/use-toast';
 import { AxiosError } from 'axios';
-import { useMemo } from 'react';
 
 export const MovieCards = () => {
   const location = useLocation();
 
-  const queryParams = useMemo(
-    () => new URLSearchParams(location.search),
-    [location.search]
-  );
+  const queryParams = new URLSearchParams(location.search);
+
   const searchQuery = queryParams.get('search') || '';
 
-  const { data, isError, error } = useGetMovies(searchQuery || '');
+  const { data, isError, error, isFetching } = useGetMovies(searchQuery || '');
   const movies = data?.data.data;
 
   if (isError) {
@@ -27,9 +24,13 @@ export const MovieCards = () => {
     });
   }
 
+  if (isFetching) {
+    return <h2>🌀 Loading...</h2>;
+  }
+
   return (
     <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-      {movies?.map((card, index) => (
+      {movies?.map((card: { original_title: string }, index: number) => (
         <Card key={index}>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">
